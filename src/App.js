@@ -1,9 +1,12 @@
-import PensionMainPage from "./Components/PensionMainPage";
+import { BrowserRouter } from "react-router-dom";
+import QnA from "./Components/QnA";
 
 function App() {
   return (
     <div>
-      <PensionMainPage />
+      <BrowserRouter>
+        <QnA />
+      </BrowserRouter>
     </div>
   );
 }
