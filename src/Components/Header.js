@@ -1,4 +1,4 @@
-import '../css/Header.css';
+import '../css/header.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import CartImg from '../img/장바구니.png';

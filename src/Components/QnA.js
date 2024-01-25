@@ -9,8 +9,7 @@ import "../css/questionlist.css";
 import "../css/page.css";
 
 function QnA() {
-    <Header />
-  const [bbsList, setBbsList] = useState([]);
+  const [questionList, setQuestionList] = useState([]);
 
   // 검색용 Hook
   const [choiceVal, setChoiceVal] = useState("");
@@ -23,21 +22,21 @@ function QnA() {
   const [totalCnt, setTotalCnt] = useState(0);
 
   // 게시글 전체 조회
-  const getBbsList = async (page) => {
+  const getQuestionList = async (page) => {
     try {
 		const response = await axios.get("http://localhost:8282/question/list", {
 			params: {"page": page - 1},
 		  });
 
-      console.log("[BbsList.js] useEffect() success :D");
+      console.log("[QnA.js] useEffect() success");
       console.log(response.data);
 
-      setBbsList(response.data.content);
+      setQuestionList(response.data.content);
       setPageSize(response.data.pageSize);
       setTotalPages(response.data.totalPages);
       setTotalCnt(response.data.totalElements);
     } catch (error) {
-      console.log("[BbsList.js] useEffect() error :<");
+      console.log("[QnA.js] useEffect() error");
       console.log(error);
     }
   };
@@ -54,20 +53,20 @@ function QnA() {
         },
       });
 
-      console.log("[BbsList.js searchBtn()] success :D");
+      console.log("[QnA.js searchBtn()] success");
       console.log(response.data);
 
-      setBbsList(response.data.content);
+      setQuestionList(response.data.content);
       setTotalCnt(response.data.totalElements);
     } catch (error) {
-      console.log("[BbsList.js searchBtn()] error :<");
+      console.log("[QnA.js searchBtn()] error");
       console.log(error);
     }
   };
 
   // 첫 로딩 시, 한 페이지만 가져옴
   useEffect(() => {
-    getBbsList(1);
+    getQuestionList(1);
   }, []);
 
   // 검색 조건 저장
@@ -77,11 +76,12 @@ function QnA() {
   // 페이징 보여주기 
   const changePage = (page) => {
     setPage(page);
-    getBbsList(page);
+    getQuestionList(page);
   };
 
   return (
     <div>
+      <Header />
       {/* 검색 */}
       <table className="search">
         <tbody>
@@ -132,8 +132,8 @@ function QnA() {
         </thead>
 
         <tbody>
-          {bbsList.map(function (bbs, idx) {
-            return <TableRow obj={bbs} key={idx} cnt={idx + 1} />;
+          {questionList.map(function (question, idx) {
+            return <TableRow obj={question} key={idx} cnt={idx + 1} />;
           })}
         </tbody>
       </table>
@@ -150,7 +150,7 @@ function QnA() {
       />
 
       <div className="my-5 d-flex justify-content-center">
-        <Link className="btn btn-outline-secondary" to="/QuestionWrite">
+        <Link className="btn btn-outline-secondary" to="/question/write">
           <i className="fas fa-pen"></i> &nbsp; 글쓰기
         </Link>
       </div>
@@ -160,18 +160,18 @@ function QnA() {
 
 /* 글 목록 테이블 행 컴포넌트 */
 function TableRow(props) {
-  const bbs = props.obj;
+  const question = props.obj;
 
   return (
     <tr>
       <th>{props.cnt}</th>
       <td>
-        <Link to={{ pathname: `/bbsdetail/${bbs.boardId}` }}>
-          <span className="underline bbs-title">{bbs.title}</span>
+        <Link to={{ pathname: `/question/${question.questionNum}` }}>
+          <span className="underline bbs-title">{question.title}</span>
         </Link>
       </td>
-      <td>{bbs.writerName}</td>
-      <td style={{ textAlign: 'center' }}>{bbs.viewCount}</td>
+      <td>{question.writerNickname}</td>
+      <td style={{ textAlign: 'center' }}>{question.viewCount}</td>
     </tr>
   );
 }
